@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "../../MathLibrary-main/MathLibrary/NativePair.h"
-#include "../../MathLibrary-main/MathLibrary/NativeVector.h"
+#include "MathLibrary/NativePair.h"
+#include "MathLibrary/NativeVector.h"
 
 
 TEST(CreateVectorCase, NativeVector) {
