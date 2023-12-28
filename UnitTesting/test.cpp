@@ -18,12 +18,19 @@ TEST(CheckIntElementCase, NativeVector) {
 	MathLibrary::NativeVector<int> myNativeVector;
 	myNativeVector.append(4);
 	ASSERT_EQ(myNativeVector[0], 4);
-	EXPECT_TRUE(true);
 }
 
 TEST(CheckStringElementCase, NativeVector) {
 	MathLibrary::NativeVector<std::string> myNativeVector;
 	myNativeVector.append("Poland");
 	ASSERT_EQ(myNativeVector[0], std::string("Poland"));
-	EXPECT_TRUE(true);
+}
+
+TEST(CreateVectorWithElements, NativeVector) {
+	std::string tempArray[] = { "Poland", "Czech", "Bulgaria", "Great Britan" };
+	MathLibrary::NativeVector<std::string> myNativeVector(tempArray);
+	ASSERT_EQ(myNativeVector[0], "Poland");
+	ASSERT_EQ(myNativeVector[1], "Czech");
+	ASSERT_EQ(myNativeVector[2], "Bulgaria");
+	ASSERT_EQ(myNativeVector[3], "Great Britan");
 }
