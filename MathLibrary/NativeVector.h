@@ -1,6 +1,6 @@
 #pragma once
 #include <ostream>
-#include <iterator>
+
 namespace MathLibrary
 {
 	template <typename T>
@@ -10,6 +10,9 @@ namespace MathLibrary
 		int m_size;
 		int m_capacity = 1;
 		T* m_buffer = new T[m_capacity];
+
+		T* end() { return m_buffer + m_size; };
+
 	public:
 		NativeVector() : m_size{ 0 } {};
 		template<size_t N>
@@ -41,17 +44,46 @@ namespace MathLibrary
 			}
 		}
 
-		NativeVector<T> merge(NativeVector<T>& other)
+		template<size_t N>
+		void appendArray(const T(&array)[N]) noexcept
 		{
-			//NativeVector<T> obj;
-			//obj.m_capacity = this->m_capacity + other.m_capacity;
+			if (m_capacity <= m_size + N)
+			{
+				auto t_buffer = std::move(m_buffer);
+				m_size = m_size + N;
+				m_buffer = new T[m_size];
+				std::move(t_buffer, t_buffer + m_size - N, m_buffer);
+				m_capacity = m_size;
+				delete[] t_buffer;
+			}
+			std::move(array, array + N, m_buffer + m_size - N);
+		}
 
-			//T* m_buffer = new T[m_capacity];
+		void merge(const NativeVector<T>& other)
+		{
+			if (*this != other)
+			{
+				auto t_buffer = std::move(m_buffer);
+				m_buffer = new T[m_size + other.m_size];
+				std::move(t_buffer, t_buffer + m_size, m_buffer);
+				delete[] t_buffer;
+
+				std::copy(other.m_buffer, other.m_buffer + other.m_size, m_buffer + m_size);
+				m_size += other.m_size;
+				m_capacity = m_size;
+			}
 		};
 
 		T const& operator[](const int i)
 		{
-			return m_buffer[i];
+			if (i >= m_size || i < -m_size)
+			{
+				throw std::out_of_range("Out of range");
+			}
+			if (i >= 0)
+				return m_buffer[i];
+			else
+				return *(this->end() + i);
 		}
 		NativeVector& operator=(NativeVector&& other) noexcept
 		{
@@ -82,6 +114,11 @@ namespace MathLibrary
 				}
 			}
 			return *this;
+		}
+
+		bool operator!=(const NativeVector& other)
+		{
+			return !(*m_buffer == *other.m_buffer);
 		}
 	};
 

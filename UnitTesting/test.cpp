@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "../../MathLibrary/MathLibrary/NativePair.h"
-#include "../../MathLibrary/MathLibrary/NativeVector.h"
+#include "../../MathLibrary-main/MathLibrary/NativePair.h"
+#include "../../MathLibrary-main/MathLibrary/NativeVector.h"
 
 
 TEST(CreateVectorCase, NativeVector) {
@@ -33,4 +33,68 @@ TEST(CreateVectorWithElements, NativeVector) {
 	ASSERT_EQ(myNativeVector[1], "Czech");
 	ASSERT_EQ(myNativeVector[2], "Bulgaria");
 	ASSERT_EQ(myNativeVector[3], "Great Britan");
+}
+
+TEST(AppendVectorWithElements, NativeVector) {
+	std::string tempArray[] = { "Poland", "Czech", "Bulgaria", "Great Britan" };
+	MathLibrary::NativeVector<std::string> myNativeVector;
+	myNativeVector.appendArray(tempArray);
+	ASSERT_EQ(myNativeVector[0], "Poland");
+	ASSERT_EQ(myNativeVector[1], "Czech");
+	ASSERT_EQ(myNativeVector[2], "Bulgaria");
+	ASSERT_EQ(myNativeVector[3], "Great Britan");
+}
+
+TEST(AppendVectorWithElementsNotEmpty, NativeVector) {
+	std::string tempArray[] = { "Poland", "Czech"};
+	std::string tempArray2[] = { "Bulgaria", "Great Britan" };
+	MathLibrary::NativeVector<std::string> myNativeVector(tempArray);
+	myNativeVector.appendArray(tempArray2);
+	ASSERT_EQ(myNativeVector[0], "Poland");
+	ASSERT_EQ(myNativeVector[1], "Czech");
+	ASSERT_EQ(myNativeVector[2], "Bulgaria");
+	ASSERT_EQ(myNativeVector[3], "Great Britan");
+}
+
+TEST(MergeVectors, NativeVector) {
+	std::string tempArray[] = { "Poland", "Czech" };
+	std::string tempArray2[] = { "Bulgaria", "Great Britan" };
+	MathLibrary::NativeVector<std::string> myNativeVector1(tempArray);
+	MathLibrary::NativeVector<std::string> myNativeVector2(tempArray2);
+	myNativeVector1.merge(myNativeVector2);
+	ASSERT_EQ(myNativeVector1[0], "Poland");
+	ASSERT_EQ(myNativeVector1[1], "Czech");
+	ASSERT_EQ(myNativeVector1[2], "Bulgaria");
+	ASSERT_EQ(myNativeVector1[3], "Great Britan");
+	
+	ASSERT_EQ(myNativeVector2[0], "Bulgaria");
+	ASSERT_EQ(myNativeVector2[1], "Great Britan");
+}
+
+TEST(FalseMergeVectors, NativeVector) {
+	std::string tempArray[] = { "Poland", "Czech" };
+	MathLibrary::NativeVector<std::string> myNativeVector(tempArray);
+	myNativeVector.merge(myNativeVector);
+	ASSERT_EQ(myNativeVector[0], "Poland");
+	ASSERT_EQ(myNativeVector[1], "Czech");
+	ASSERT_THROW(myNativeVector[2], std::out_of_range);
+	ASSERT_THROW(myNativeVector[3], std::out_of_range);
+}
+
+TEST(NegativeOperatorVector, NativeVector) {
+	std::string tempArray[] = { "Poland", "Czech", "Bulgaria", "Great Britan" };
+	MathLibrary::NativeVector<std::string> myNativeVector(tempArray);
+	ASSERT_EQ(myNativeVector[0], "Poland");
+	ASSERT_EQ(myNativeVector[1], "Czech");
+	ASSERT_EQ(myNativeVector[-1], "Great Britan");
+	ASSERT_EQ(myNativeVector[-2], "Bulgaria");
+	ASSERT_EQ(myNativeVector[-4], "Poland");
+}
+
+TEST(FalseNegativeOperatorVector, NativeVector) {
+	std::string tempArray[] = { "Poland", "Czech", "Bulgaria", "Great Britan" };
+	MathLibrary::NativeVector<std::string> myNativeVector(tempArray);
+	ASSERT_THROW(myNativeVector[-5], std::out_of_range);
+	ASSERT_THROW(myNativeVector[-6], std::out_of_range);
+	ASSERT_THROW(myNativeVector[-7], std::out_of_range);
 }
